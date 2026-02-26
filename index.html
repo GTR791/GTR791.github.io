@@ -47,7 +47,7 @@ nav a:hover {
 
 .hero {
     text-align: center;
-    padding: 120px 10% 100px 10%;
+    padding: 50px 10% 50px 10%;
 }
 
 .hero h1 {
@@ -121,6 +121,33 @@ footer {
     color: #94a3b8;
     font-size: 0.9rem;
 }
+
+#login {
+    text-align: center;
+    margin-top: 100px;
+}
+
+#login input {
+    padding: 10px;
+    font-size: 1rem;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: none;
+}
+
+#login button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    border-radius: 50px;
+    border: none;
+    background: #6366f1;
+    color: white;
+    cursor: pointer;
+}
+
+#login button:hover {
+    background: #3b82f6;
+}
 </style>
 </head>
 <body>
@@ -138,7 +165,17 @@ footer {
     <h1>Powerful. Clean. Fast.</h1>
     <p>Experience a modern solution designed for performance and simplicity. Built with precision and optimized for real-world use.</p>
 
-    <div style="margin-top:40px; display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
+    <!-- LOGIN FORM -->
+    <div id="login">
+        <h2>Enter Credentials</h2>
+        <input type="text" id="user" placeholder="Username"><br>
+        <input type="password" id="pass" placeholder="Password"><br>
+        <button onclick="checkLogin()">Login</button>
+        <p id="msg" style="color:red;"></p>
+    </div>
+
+    <!-- DOWNLOAD BUTTONS (hidden by default) -->
+    <div id="content" style="display:none; margin-top:40px; display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
 
         <a href="https://www.dropbox.com/scl/fi/adzrpc80kqfumzfg65k2z/Xeno-v1.3.25b.zip?rlkey=g3erhqw9wuxewj6gocb0vudg1&st=bm1s2vro&dl=1" class="download-btn">
             Download for PC
@@ -170,6 +207,21 @@ footer {
 <footer>
     © 2026 VexCode. All rights reserved.
 </footer>
+
+<script>
+function checkLogin() {
+    const username = document.getElementById('user').value;
+    const password = document.getElementById('pass').value;
+
+    // Set your desired username and password here
+    if(username === 'Admin' && password === '05329509') {
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('content').style.display = 'flex';
+    } else {
+        document.getElementById('msg').innerText = 'Wrong credentials';
+    }
+}
+</script>
 
 </body>
 </html>
