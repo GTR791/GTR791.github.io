@@ -175,8 +175,7 @@ footer {
     </div>
 
     <!-- DOWNLOAD BUTTONS (hidden by default) -->
-    <div id="content" style="display:none; margin-top:40px; display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
-
+    <div id="content" style="display:none; margin-top:40px; gap:20px; justify-content:center; flex-wrap:wrap;">
         <a href="https://www.dropbox.com/scl/fi/adzrpc80kqfumzfg65k2z/Xeno-v1.3.25b.zip?rlkey=g3erhqw9wuxewj6gocb0vudg1&st=bm1s2vro&dl=1" class="download-btn">
             Download for PC
         </a>
@@ -184,7 +183,6 @@ footer {
         <a href="https://www.dropbox.com/scl/fi/87sb44vymzml2ylas87r6/DeltaExecutor-v2.709.apk?rlkey=iro9wrqwfgoalq05w62pctu1p&st=zdmk0c0w&dl=1" class="download-btn">
             Download for Android
         </a>
-
     </div>
 
 </section>
@@ -213,8 +211,8 @@ function checkLogin() {
     const username = document.getElementById('user').value;
     const password = document.getElementById('pass').value;
 
-    // Set your desired username and password here
-    if(username === 'Admin' && password === '05329509') {
+    // SET YOUR CUSTOM CREDENTIALS HERE
+    if(username === 'admin' && password === 'secret') {
         document.getElementById('login').style.display = 'none';
         document.getElementById('content').style.display = 'flex';
     } else {
