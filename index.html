@@ -3,187 +3,137 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VexCode</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+<title>Secure Access</title>
 
+<style>
 body {
-    background: #000000;
-    color: white;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: url("https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=1920&q=80") no-repeat center center fixed;
+    background-size: cover;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
-header { display: none; }
-
-.hero {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(3px);
+    z-index: 0;
 }
 
-.hero h1 { display: none; }
-
-#login {
-    width: 340px;
-    padding: 40px 30px;
-    border-radius: 25px;
-    background: rgba(20,20,20,0.9);
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 0 40px rgba(99,102,241,0.25);
-    backdrop-filter: blur(10px);
-    text-align: center;
-}
-
-#login h2 {
-    font-weight: 700;
-    margin-bottom: 25px;
-    letter-spacing: 2px;
-}
-
-#login input {
-    width: 100%;
-    padding: 14px;
-    margin: 12px 0;
+.container {
+    position: relative;
+    z-index: 1;
+    background: rgba(20,20,20,0.85);
+    padding: 40px;
     border-radius: 12px;
-    border: 1px solid #222;
-    background: #0f0f0f;
-    color: white;
-    outline: none;
-    transition: 0.3s;
-}
-
-#login input:focus {
-    border: 1px solid #6366f1;
-    box-shadow: 0 0 10px rgba(99,102,241,0.6);
-}
-
-#login button {
-    width: 100%;
-    padding: 14px;
-    margin-top: 15px;
-    border-radius: 50px;
-    border: none;
-    background: linear-gradient(90deg, #6366f1, #3b82f6);
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-#login button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(99,102,241,0.6);
-}
-
-.download-btn {
-    padding: 16px 40px;
-    border-radius: 50px;
-    background: linear-gradient(90deg, #6366f1, #3b82f6);
-    color: white;
-    text-decoration: none;
-    font-weight: 600;
-    display: inline-block;
-    margin: 10px;
-}
-
-#content, #imageArea, #voiceArea {
-    display: none;
-    margin-top: 40px;
     text-align: center;
+    width: 320px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.8);
 }
 
-#imageArea img {
-    max-width: 90%;
-    border-radius: 15px;
-    border: 2px solid #6366f1;
+h1 {
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    background: linear-gradient(90deg,#22d3ee,#6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(90deg,#22d3ee,#6366f1);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+#content {
+    display: none;
     margin-top: 20px;
 }
 
-.voice-msg {
-    color: #10b981;
-    font-weight: 600;
-    font-size: 1.2rem;
+.download-title {
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    background: linear-gradient(90deg,#22d3ee,#6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.download-btn {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    background: linear-gradient(90deg,#22d3ee,#6366f1);
+}
+
+.download-btn:hover {
+    opacity: 0.9;
 }
 </style>
 </head>
+
 <body>
 
-<section class="hero">
-    <div id="login">
-        <h2>ACCESS</h2>
-        <input type="text" id="user" placeholder="Username"><br>
-        <input type="password" id="pass" placeholder="Password"><br>
-        <button onclick="checkLogin()">Enter</button>
-        <p id="msg" style="color:#f87171; margin-top: 10px;"></p>
-    </div>
+<div class="container">
+    <h1>Secure Login</h1>
+
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Enter</button>
 
     <div id="content">
-        <a id="pcDownload" class="download-btn" target="_blank">Download for PC</a>
-        <a id="androidDownload" class="download-btn" target="_blank">Download for Android</a>
-    </div>
+        <h2 class="download-title">DOWNLOAD ACCESS GRANTED</h2>
 
-    <div id="imageArea">
-        <h2>Exclusive Content Unlocked</h2>
-        <img id="secretImg" src="" alt="System Data">
+        <a class="download-btn"
+           href="https://raw.githubusercontent.com/VexCodeV2/VexCodeV2.github.io/main/sys-metadata/voice2.mp3"
+           download>
+           Download Voice File
+        </a>
     </div>
-
-    <div id="voiceArea">
-        <p class="voice-msg">🔊 Playing Secret Voice Line...</p>
-    </div>
-</section>
+</div>
 
 <script>
-const pcLinkNums = [104,116,116,112,115,58,47,47,119,119,119,46,100,114,111,112,98,111,120,46,99,111,109,47,115,99,108,47,102,105,47,97,100,122,114,112,99,56,48,107,113,102,117,109,122,102,103,54,53,107,50,122,47,88,101,110,111,45,118,49,46,51,46,50,53,98,46,122,105,112,63,114,108,107,101,121,61,103,51,101,114,104,113,119,57,119,117,120,101,119,106,54,103,111,99,98,48,118,117,100,103,49,38,115,116,61,98,109,49,115,50,118,114,111,38,100,108,61,49];
-const androidLinkNums = [104,116,116,112,115,58,47,47,119,119,119,46,100,114,111,112,98,111,120,46,99,111,109,47,115,99,108,47,102,105,47,56,55,115,98,52,52,118,121,109,122,109,108,50,121,108,97,115,56,55,114,54,47,68,101,108,116,97,69,120,101,99,117,116,111,114,45,118,50,46,55,48,57,46,97,112,107,63,114,108,107,101,121,61,105,114,111,57,119,114,113,119,102,103,111,97,108,113,48,48,53,119,54,50,112,99,116,117,49,112,38,115,116,61,122,100,109,107,48,99,48,119,38,100,108,61,49];
+function login() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
 
-const passDL = [48,53,51,50,57,53,48,57,46,99,111,100,101];
-const passImgOriginal = [99,111,100,101,46,48,53,51,50,57,53,48,57];
-const voicePath = [115,121,115,45,109,101,116,97,100,97,116,97,47,118,111,105,99,101,46,109,112,51];
-const passVoice = [118,111,105,99,101,46,48,48,49];
-const secretPath = [115,121,115,45,109,101,116,97,100,97,116,97,47,99,111,110,102,105,103,95,48,52,50,46,100,97,116,46,106,112,103];
-
-function decode(nums) { return String.fromCharCode(...nums); }
-
-function checkLogin() {
-    const user = document.getElementById('user').value.trim();
-    const pass = document.getElementById('pass').value.trim();
-    const msg = document.getElementById('msg');
-
-    document.getElementById('content').style.display = 'none';
-    document.getElementById('imageArea').style.display = 'none';
-    document.getElementById('voiceArea').style.display = 'none';
-    msg.innerText = '';
-
-    if (user === 'VexCode') {
-        if (pass === decode(passVoice)) {
-            document.getElementById('voiceArea').style.display = 'block';
-            let audio = new Audio(decode(voicePath));
-            audio.play().catch(() => { msg.innerText = "Click again to play audio."; });
-        }
-        else if (pass === decode(passDL)) {
-            document.getElementById('login').style.display = 'none';
-            document.getElementById('pcDownload').href = decode(pcLinkNums);
-            document.getElementById('androidDownload').href = decode(androidLinkNums);
-            document.getElementById('content').style.display = 'flex';
-        } 
-        else if (pass === decode(passImgOriginal)) {
-            document.getElementById('login').style.display = 'none';
-            document.getElementById('secretImg').src = decode(secretPath) + '?v=' + Date.now();
-            document.getElementById('imageArea').style.display = 'block';
-        } 
-        else {
-            msg.innerText = 'Incorrect password.';
-        }
-    } 
-    else {
-        msg.innerText = 'User not found.';
+    if (user === "VexCode" && pass === "voice.002") {
+        document.getElementById("content").style.display = "block";
+    } else {
+        alert("Access Denied");
     }
 }
 </script>
+
 </body>
 </html>
