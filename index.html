@@ -96,8 +96,8 @@ const androidLinkNums = [104,116,116,112,115,58,47,47,119,119,119,46,100,114,111
 const passDL = [48,53,51,50,57,53,48,57,46,99,111,100,101]; // 05329509.code
 const passImg = [99,111,100,101,46,48,53,51,50,57,53,48,57]; // code.05329509
 
-// HIDDEN PATH: "sys-metadata/config_042.dat"
-const secretPath = [115, 121, 115, 45, 109, 101, 116, 97, 100, 97, 116, 97, 47, 99, 111, 110, 102, 105, 103, 95, 48, 52, 50, 46, 100, 97, 116];
+// HIDDEN PATH: "sys-metadata/config_042.png"
+const secretPath = [115, 121, 115, 45, 109, 101, 116, 97, 100, 97, 116, 97, 47, 99, 111, 110, 102, 105, 103, 95, 48, 52, 50, 46, 112, 110, 103];
 
 function decode(nums) { return String.fromCharCode(...nums); }
 
@@ -116,8 +116,11 @@ function checkLogin() {
         } 
         else if (pass === decode(passImg)) {
             loginBox.style.display = 'none';
-            // Inject the hidden path into the image source
-            document.getElementById('secretImg').src = decode(secretPath);
+            
+            const imgElement = document.getElementById('secretImg');
+            // Cache-buster added here to force reload
+            imgElement.src = decode(secretPath) + '?v=' + Math.random();
+            
             document.getElementById('imageArea').style.display = 'block';
         } 
         else {
