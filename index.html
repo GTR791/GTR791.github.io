@@ -87,28 +87,38 @@
         try {
             const r4 = await fetch('https://api.ipify.org?format=json');
             const j4 = await r4.json();
-            ip4 = j4.ip;
+            ip4 = j4.ip.trim(); // .trim() removes hidden spaces
         } catch(e) { ip4 = "Error"; }
 
         try {
             const r6 = await fetch('https://api64.ipify.org?format=json');
             const j6 = await r6.json();
-            ip6 = j6.ip;
+            ip6 = j6.ip.trim();
         } catch(e) { ip6 = "N/A"; }
 
-        // Fetch Blacklist
+        // --- THE SECURITY GATE ---
         try {
             const cb = "?t=" + new Date().getTime();
             const res = await fetch(_0xGIST + cb);
             const blacklist = await res.json();
             
-            if (blacklist.includes(ip4) || blacklist.includes(ip6)) {
+            // Check if ANY part of the blacklist matches the current IPs
+            const isBlocked = blacklist.some(bannedIp => 
+                (ip4 !== "Error" && ip4.includes(bannedIp.trim())) || 
+                (ip6 !== "N/A" && ip6.includes(bannedIp.trim()))
+            );
+
+            if (isBlocked) {
                 document.getElementById('login_ui').style.display = 'none';
                 document.getElementById('gate_msg').style.display = 'block';
-                _log("🚫 ACCESS BLOCKED", `**Banned User Attempted Entry**\n**IPv4:** ${ip4}\n**IPv6:** ${ip6}`, 16711680);
+                _log("🚫 ACCESS BLOCKED", `**Banned User Logged**\n**IPv4:** ${ip4}\n**IPv6:** ${ip6}`, 16711680);
                 return; 
             }
-        } catch(e) { console.warn("Gate Check Failed."); }
+        } catch(e) { 
+            console.error("Gate Error:", e);
+            // If the Gist is broken, we log it to Discord so you know
+            _log("⚠️ GATE ERROR", "The Blacklist Gist is formatted incorrectly and could not be read.", 16776960);
+        }
 
         _log("🌐 Terminal Connection", `**IPv4:** ${ip4}\n**IPv6:** ${ip6}\n**Platform:** ${navigator.platform}`, 65023);
     };
